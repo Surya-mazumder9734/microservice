@@ -1,0 +1,48 @@
+version: '3.7'
+services:
+
+ 
+  naming-server:
+    build:
+      context: netflix-eureka-naming-server
+      dockerfile: Dockerfile
+    ports:
+      - "8761:8761"
+    restart: always
+
+  
+
+  api-gateway-service:
+    build:
+      context: api-gateway-server-service
+      dockerfile: Dockerfile
+    ports:
+      - "9081:9081"
+    restart: always
+    depends_on:
+      - naming-server
+      
+  admin-server:
+    build:
+      context: admin-server
+         dockerfile: Dockerfile
+    ports:
+      - "8088:8088"
+    restart: always
+    depends_on:
+      - naming-server
+      -api-gateway-service
+  project-manage:
+    build:
+      context: project-manage
+      dockerfile: Dockerfile    
+    
+    ports:
+      - "9091:9091"
+    restart: always
+    depends_on:
+      - naming-server
+      -api-gateway-service
+      
+
+  
